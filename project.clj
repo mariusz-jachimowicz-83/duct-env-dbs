@@ -1,4 +1,4 @@
-(defproject com.mjachimowicz/duct-env-dbs "0.1.0-SNAPSHOT"
+(defproject com.mjachimowicz/duct-env-dbs "0.1.0"
   :description "Very simple sql db module for Duct framework"
   :url         "https://github.com/mariusz-jachimowicz-83/duct-env-dbs"
   :license     {:name "Eclipse Public License"
