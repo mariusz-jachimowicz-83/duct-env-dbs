@@ -28,6 +28,12 @@ or
                            :testing     #duct/env ["DB_URL_TEST" Str]}}}
 ```
 
+In all places when you need use db you need to reference `:duct.database/sql` same way as in [Duct module.sql](https://github.com/duct-framework/module.sql):
+
+```clojure
+{:some-component {:db (ig/ref :duct.database/sql)}}
+```
+
 ## License
 
 Copyright © 2018 Mariusz Jachimowicz

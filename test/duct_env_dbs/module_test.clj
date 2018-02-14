@@ -27,10 +27,10 @@
                              :production  {:database-url "db-production-url"}
                              :testing     {:database-url "db-testing-url"}}})
 
-(defmethod ig/init-key :some-component-config [_ config] config)
+(defmethod ig/init-key :some-component [_ config] config)
 
 (def some-component-config
-  {:some-component-config {:db (ig/ref :duct.database/sql)}})
+  {:some-component {:db (ig/ref :duct.database/sql)}})
 
 (deftest configuration-test
   (testing "DB url is taken based on environment"
@@ -66,7 +66,7 @@
         system (-> (merge base-config some-component-config)
                    duct/prep
                    ig/init)
-        spec (-> system :some-component-config :db :spec)]
+        spec (-> system :some-component :db :spec)]
 
     (testing "jdbc using Hikari connection pool"
       (jdbc/execute! spec ["CREATE TABLE foo (id INT, body TEXT)"])
