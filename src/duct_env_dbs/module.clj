@@ -32,7 +32,7 @@
 (defn- get-environment [config options]
   (:environment options (:duct.core/environment config :production)))
 
-(defmethod ig/init-key :duct.module/sql [_ options]
+(defmethod ig/init-key :duct-env-dbs.module/sql [_ options]
   {:req #{:duct/logger}
    :fn  (fn [config]
           (let [environment (get-environment config options)

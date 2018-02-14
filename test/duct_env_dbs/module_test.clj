@@ -14,7 +14,7 @@
 
 (defrecord NoOpLogger []
   logger/Logger
-  (-log [logger level ns-str file line id event data]))
+  (-log [_ level ns-str file line id event data]))
 
 ;; fake logger initialization
 ;; we don't need whole logger subsystem
@@ -23,9 +23,14 @@
 (def base-config
   {::duct/environment :development
    :duct/logger {}
-   :duct.module/sql {:development {:database-url "jdbc:sqlite:"}
-                     :production  {:database-url "db-production-url"}
-                     :testing     {:database-url "db-testing-url"}}})
+   :duct-env-dbs.module/sql {:development {:database-url "jdbc:sqlite:"}
+                             :production  {:database-url "db-production-url"}
+                             :testing     {:database-url "db-testing-url"}}})
+
+(defmethod ig/init-key :some-component-config [_ config] config)
+
+(def some-component-config
+  {:some-component-config {:db (ig/ref :duct.database/sql)}})
 
 (deftest configuration-test
   (testing "DB url is taken based on environment"
@@ -58,14 +63,10 @@
 
 (deftest db-pool-test
   (let [launch-parts [:duct.module/sql :duct.database.sql/hikaricp]
-        _ (println "== before ")
-        _ (clojure.pprint/pprint (duct/prep base-config))
-        system (-> base-config
-                   (duct/prep)
-                   (ig/init))
-        _ (println "== system started")
-        _ (clojure.pprint/pprint system)
-        spec (-> system :duct.module/sql :spec)]
+        system (-> (merge base-config some-component-config)
+                   duct/prep
+                   ig/init)
+        spec (-> system :some-component-config :db :spec)]
 
     (testing "jdbc using Hikari connection pool"
       (jdbc/execute! spec ["CREATE TABLE foo (id INT, body TEXT)"])
@@ -81,5 +82,4 @@
     (testing "closing Hikari connection pool"
       (is (not (-> spec :datasource unwrap-logger .isClosed)))
       (ig/halt! system)
-      (is (-> spec :datasource unwrap-logger .isClosed))
-      #_(ig/halt! system))))
+      (is (-> spec :datasource unwrap-logger .isClosed)))))

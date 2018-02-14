@@ -1,1 +1,1 @@
-{:duct.module/sql [:duct/module]}
+{:duct-env-dbs.module/sql [:duct/module]}

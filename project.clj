@@ -16,7 +16,8 @@
   ;; lein cloverage --fail-threshold 95
   ;; lein kibit
   ;; lein eastwood
-  :profiles {:dev {:dependencies [[org.xerial/sqlite-jdbc "3.20.1"]
+  :profiles {:dev {:dependencies [[duct/logger "0.2.1"]
+                                  [org.xerial/sqlite-jdbc "3.20.1"]
                                   [org.slf4j/slf4j-nop    "1.7.25"]
                                   [org.clojure/java.jdbc  "0.7.3"]]
                    :plugins [[lein-cloverage  "1.0.10"]
